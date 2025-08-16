@@ -1,13 +1,13 @@
-import * as React from "react"
-
-import { someUtil } from '@/lib/utils';
-
-
-
+import * as React from "react";
+import { someUtil } from '@/lib/utils'; // Correct alias import
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "secondary" | "destructive" | "outline"
+  variant?: "default" | "secondary" | "destructive" | "outline";
 }
+
+const cn = (...classes: (string | undefined | false)[]) => {
+  return classes.filter(Boolean).join(' ');
+};
 
 export function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variants = {
@@ -15,7 +15,7 @@ export function Badge({ className, variant = "default", ...props }: BadgeProps) 
     secondary: "bg-secondary text-secondary-foreground",
     destructive: "bg-destructive text-destructive-foreground",
     outline: "border border-input text-foreground"
-  }
+  };
 
   return (
     <span
@@ -25,6 +25,8 @@ export function Badge({ className, variant = "default", ...props }: BadgeProps) 
         className
       )}
       {...props}
-    />
-  )
+    >
+      {props.children}
+    </span>
+  );
 }
