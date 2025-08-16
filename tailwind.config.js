@@ -1,18 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: ["class"],
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}"
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
       colors: {
-        recycle: "#16a34a",
-        compost: "#ca8a04",
-        hazard: "#dc2626",
-        general: "#6b7280"
-      }
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+      },
     },
   },
   plugins: [],
-};
+}
