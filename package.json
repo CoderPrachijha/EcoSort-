@@ -1,13 +1,4 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    }
-  }
-}
-
-{
   "name": "ecosort",
   "version": "1.0.0",
   "private": true,
