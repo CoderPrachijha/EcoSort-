@@ -1,5 +1,4 @@
 import * as React from "react";
-import { someUtil } from '@/lib/utils'; // Correct alias import
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "default" | "secondary" | "destructive" | "outline";
