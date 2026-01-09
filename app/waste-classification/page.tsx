@@ -2,242 +2,111 @@
 
 import { useState } from "react";
 import { Search, Recycle, Leaf, AlertTriangle, Trash2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 const wasteCategories = [
   {
     id: "recyclable",
-    name: "Recyclable", 
+    name: "Recyclable",
     icon: Recycle,
-    color: "recycle",
-    bgClass: "bg-recycle",
-    textClass: "text-recycle",
-    iconBgClass: "bg-recycle/10",
-    badgeClass: "bg-recycle/10 text-recycle border-recycle/20",
-    buttonClass: "bg-recycle text-recycle-foreground",
-    hoverBadgeClass: "hover:bg-recycle/10",
+    color: "text-green-600",
+    bg: "bg-green-50",
     description: "Items that can be processed into new products",
-    examples: ["Plastic bottles", "Aluminum cans", "Cardboard", "Glass jars", "Paper", "Metal containers", "Pizza boxes"]
+    examples: ["Plastic bottles", "Aluminum cans", "Cardboard", "Glass jars"]
   },
   {
     id: "compostable",
     name: "Compostable",
     icon: Leaf,
-    color: "compost",
-    bgClass: "bg-compost",
-    textClass: "text-compost",
-    iconBgClass: "bg-compost/10",
-    badgeClass: "bg-compost/10 text-compost border-compost/20",
-    buttonClass: "bg-compost text-compost-foreground",
-    hoverBadgeClass: "hover:bg-compost/10",
-    description: "Organic waste that can decompose naturally",
-    examples: ["Food scraps", "Yard trimmings", "Coffee grounds", "Eggshells", "Fruit peels", "Leaves"]
+    color: "text-lime-600",
+    bg: "bg-lime-50",
+    description: "Organic waste that decomposes naturally",
+    examples: ["Food scraps", "Fruit peels", "Coffee grounds"]
   },
   {
     id: "hazardous",
     name: "Hazardous",
     icon: AlertTriangle,
-    color: "hazard",
-    bgClass: "bg-hazard",
-    textClass: "text-hazard",
-    iconBgClass: "bg-hazard/10",
-    badgeClass: "bg-hazard/10 text-hazard border-hazard/20",
-    buttonClass: "bg-hazard text-hazard-foreground",
-    hoverBadgeClass: "hover:bg-hazard/10",
-    description: "Dangerous materials requiring special disposal",
-    examples: ["Batteries", "Paint", "Electronics", "Chemicals", "Light bulbs", "Motor oil"]
+    color: "text-red-600",
+    bg: "bg-red-50",
+    description: "Requires special handling",
+    examples: ["Batteries", "Paint", "Electronics"]
   },
   {
     id: "general",
     name: "General Waste",
     icon: Trash2,
-    color: "general",
-    bgClass: "bg-general",
-    textClass: "text-general",
-    iconBgClass: "bg-general/10",
-    badgeClass: "bg-general/10 text-general border-general/20",
-    buttonClass: "bg-general text-general-foreground",
-    hoverBadgeClass: "hover:bg-general/10",
-    description: "Non-recyclable items for regular disposal",
-    examples: ["Broken ceramics", "Styrofoam", "Dirty paper", "Cigarette butts", "Plastic wrap", "Tissues"]
+    color: "text-gray-600",
+    bg: "bg-gray-50",
+    description: "Non-recyclable waste",
+    examples: ["Broken ceramics", "Styrofoam", "Tissues"]
   }
 ];
 
-const allItems = wasteCategories.flatMap(category => 
-  category.examples.map(item => ({ 
-    item, 
-    category: category.name, 
-    color: category.color,
-    badgeClass: category.badgeClass
-  }))
+const allItems = wasteCategories.flatMap(cat =>
+  cat.examples.map(item => ({ item, category: cat.name }))
 );
 
 export default function Page() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
 
-  const filteredItems = allItems.filter(({ item }) => 
-    item.toLowerCase().includes(searchTerm.toLowerCase())
+  const filtered = allItems.filter(i =>
+    i.item.toLowerCase().includes(search.toLowerCase())
   );
 
-  const displayedCategories = selectedCategory
-    ? wasteCategories.filter(cat => cat.id === selectedCategory)
-    : wasteCategories;
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 border-b border-border">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="p-2 rounded-xl bg-primary/10">
-                <Recycle className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  EcoSort+
-                </h1>
-                <p className="text-muted-foreground">Smart Waste Classification System</p>
-              </div>
-            </div>
-            
-            {/* Search Bar */}
-            <div className="relative max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search for an item to classify..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-card border-border focus:ring-primary"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
+    <main className="min-h-screen bg-white p-6">
+      <h1 className="text-3xl font-bold mb-4">🌱 EcoSort+</h1>
+      <p className="text-gray-600 mb-6">
+        Smart waste classification system
+      </p>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Search Results */}
-        {searchTerm && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">
-              Search Results for "{searchTerm}" ({filteredItems.length} items found)
-            </h2>
-            <div className="grid gap-2">
-              {filteredItems.length > 0 ? (
-                filteredItems.map(({ item, category, badgeClass }, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-card border border-border rounded-lg hover:shadow-md transition-all duration-300"
-                  >
-                    <span className="font-medium">{item}</span>
-                    <Badge variant="secondary" className={badgeClass}>
-                      {category}
-                    </Badge>
-                  </div>
-                ))
-              ) : (
-                <p className="text-muted-foreground">No items found matching "{searchTerm}"</p>
-              )}
-            </div>
-          </div>
-        )}
+      {/* Search */}
+      <div className="relative max-w-md mb-8">
+        <Search className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search an item..."
+          className="w-full pl-10 pr-4 py-2 border rounded-md"
+        />
+      </div>
 
-        {/* Category Filters */}
+      {/* Search Results */}
+      {search && (
         <div className="mb-8">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                selectedCategory === null
-                  ? 'bg-primary text-primary-foreground shadow-lg'
-                  : 'bg-secondary text-secondary-foreground hover:bg-accent'
-              }`}
-            >
-              All Categories
-            </button>
-            {wasteCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                  selectedCategory === category.id
-                    ? `${category.buttonClass} shadow-lg`
-                    : 'bg-secondary text-secondary-foreground hover:bg-accent'
-                }`}
-              >
-                {category.name}
-              </button>
-            ))}
-          </div>
+          <h2 className="font-semibold mb-2">Results:</h2>
+          {filtered.length > 0 ? (
+            filtered.map((i, idx) => (
+              <div key={idx} className="border p-2 rounded mb-1">
+                {i.item} → <span className="font-medium">{i.category}</span>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">No results found</p>
+          )}
         </div>
+      )}
 
-        {/* Waste Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {displayedCategories.map((category) => {
-            const Icon = category.icon;
-            return (
-              <Card
-                key={category.id}
-                className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border"
-              >
-                <CardHeader className="text-center">
-                  <div className={`mx-auto p-4 rounded-full ${category.iconBgClass} mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className={`h-8 w-8 ${category.textClass}`} />
-                  </div>
-                  <CardTitle className={`${category.textClass} text-xl`}>
-                    {category.name}
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    {category.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-foreground mb-3">Examples:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {category.examples.map((example, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className={`text-xs ${category.badgeClass} ${category.hoverBadgeClass} transition-colors duration-200`}
-                        >
-                          {example}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-
-        {/* Tips Section */}
-        <div className="mt-12 bg-accent/30 rounded-xl p-6">
-          <h3 className="text-xl font-semibold mb-4 text-foreground">💡 Quick Tips</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm text-muted-foreground">
-            <div>
-              <p className="font-medium text-foreground">Clean before recycling:</p>
-              <p>Rinse containers to remove food residue for better recycling.</p>
+      {/* Categories */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {wasteCategories.map(cat => {
+          const Icon = cat.icon;
+          return (
+            <div key={cat.id} className={`p-4 rounded-lg border ${cat.bg}`}>
+              <Icon className={`w-8 h-8 mb-2 ${cat.color}`} />
+              <h3 className={`font-semibold ${cat.color}`}>{cat.name}</h3>
+              <p className="text-sm text-gray-600 mb-2">
+                {cat.description}
+              </p>
+              <ul className="text-sm list-disc ml-4">
+                {cat.examples.map((e, i) => (
+                  <li key={i}>{e}</li>
+                ))}
+              </ul>
             </div>
-            <div>
-              <p className="font-medium text-foreground">Check local guidelines:</p>
-              <p>Waste disposal rules may vary by location and facility.</p>
-            </div>
-            <div>
-              <p className="font-medium text-foreground">Reduce first:</p>
-              <p>Consider reusing items before disposing of them.</p>
-            </div>
-            <div>
-              <p className="font-medium text-foreground">Special collections:</p>
-              <p>Many communities have special pickup days for hazardous waste.</p>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+          );
+        })}
+      </div>
+    </main>
   );
 }
